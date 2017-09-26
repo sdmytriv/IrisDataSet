@@ -1,0 +1,44 @@
+---
+title: "Iris Data Set"
+author: "Solomiia Dmytriv"
+date: "26 September 2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library("xtable")
+library("stargazer")
+data(iris)
+```
+***
+##Description
+This famous dataset [@fisher, @anderson] gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris. The species are *Iris setosa, verscolor*, and *virginica*. 
+
+![Illustration of the Variables of the iris data set.](iris.png)
+
+```{r summary, echo=TRUE}
+#summary(iris)
+```
+
+
+```{r summary2, echo=FALSE, results='asis'}
+options(xtable.comment = FALSE)
+xtable::xtable(summary(iris), type = "latex", comment = FALSE, caption = "Summary of the data set")
+```
+
+## Logistic Regression
+
+```{r logreg , echo=FALSE, include=FALSE}
+iris[['Is.Versicolor']] <- as.numeric(iris[['Species']] == 'versicolor')
+iris[['Is.Virginica']] <- as.numeric(iris[['Species']] == 'virginica')
+fit.1 <- glm(Is.Versicolor ~ Petal.Length + Sepal.Length, data = iris)
+fit.2 <- glm(Is.Virginica ~ Petal.Length + Sepal.Length, data = iris)
+#summary(fit)
+output <- capture.output(stargazer(fit.1, fit.2, title = 'Regression Results',  summary=FALSE, header=FALSE))
+```
+
+```{r echo=FALSE, results='asis'}
+cat(output)
+```
+
+
